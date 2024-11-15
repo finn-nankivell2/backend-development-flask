@@ -13,12 +13,14 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    
+
+    from app.cli import blueprint
+    app.register_blueprint(blueprint)
 
     @app.route("/")
     def hello_world():
         return "<p>helo world :3</p>"
-    
+
     return app
 
-from app import models
+from . import models
