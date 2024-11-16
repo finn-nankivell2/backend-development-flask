@@ -7,7 +7,29 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 def create_app(config_class=Config):
+    from logging.config import dictConfig
+
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "default": {
+                    "format": "[%(asctime)s] %(levelname)s: %(message)s",
+                }
+            },
+            "handlers": {
+                "wsgi": {
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://flask.logging.wsgi_errors_stream",
+                    "formatter": "default",
+                }
+            },
+            "root": {"level": "INFO", "handlers": ["wsgi"]},
+        }
+    )
+
     app = Flask(__name__)
     app.config.from_object(config_class)
 
@@ -15,6 +37,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
 
     from app.cli import blueprint
+
     app.register_blueprint(blueprint)
 
     @app.route("/")
@@ -23,4 +46,5 @@ def create_app(config_class=Config):
 
     return app
 
-from . import models
+
+from . import models  # noqa
