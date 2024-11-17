@@ -12,7 +12,9 @@ from .User import User
 class Post(db.Model):
     id: Mapped[int] = so.mapped_column(primary_key=True)
     body: Mapped[str] = so.mapped_column(sa.String(255))
-    timestamp: Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    timestamp: Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc)
+    )
 
     user_id: Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: Mapped[User] = so.relationship(back_populates="posts")
@@ -26,9 +28,9 @@ class Post(db.Model):
             "id": self.id,
             "body": self.body,
             "timestamp": self.timestamp.isoformat() + "Z",
-            "author": self.author.username
+            "author": self.author.username,
         }
         return data
 
 
-from .User import User
+from .User import User  # noqa

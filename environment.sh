@@ -7,3 +7,5 @@ if [ ! -d venv ]; then
 fi
 
 . venv/bin/activate
+
+systemctl is-active docker.socket --quiet || sudo systemctl start docker.socket
