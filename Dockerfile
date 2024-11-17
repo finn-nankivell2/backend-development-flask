@@ -12,15 +12,11 @@ RUN python3 -m venv $VENVPATH
 ENV PATH="$VENVPATH/bin:$PATH"
 
 COPY --chown=$USERNAME requirements.txt ./
-COPY --chown=$USERNAME app/ ./app/
-COPY --chown=$USERNAME migrations/ ./migrations/
-COPY --chown=$USERNAME storage/ ./storage/
-COPY --chown=$USERNAME config.py/ ./config/
-COPY --chown=$USERNAME server.py/ ./server/
-COPY --chown=$USERNAME .flaskenv/ ./.flaskenv/
 
-# RUN pip install --upgrade pip setuptools && \
-# 	pip install -r requirements.txt # --no-cache-dir
+RUN pip install --upgrade pip setuptools && \
+	pip install -r requirements.txt --no-cache-dir
 
-# RUN flask custom migrate_fresh_seed
-# CMD ["flask", "run"]
+COPY --chown=$USERNAME src ./src/
+WORKDIR /home/$USERNAME/src
+RUN flask custom migrate_fresh_seed
+CMD ["flask", "run", "--host", "0.0.0.0", "--port", "5000"]

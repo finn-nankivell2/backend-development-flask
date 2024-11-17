@@ -42,7 +42,7 @@ def create_app(config_class=Config):
 
     @app.route("/")
     def hello_world():
-        return "<p>helo world :3</p>"
+        return "<p>hello world :3</p>"
 
     return app
 
