@@ -1,9 +1,10 @@
 SHELL:=bash
-.ONESHELL:
+
+IMAGE_NAME=flask-docker-image
 
 dbuild:
-	docker build -t flask-docker-image .
+	docker build -t $(IMAGE_NAME) .
+	docker rmi -f $(shell docker images --filter dangling=true -q)
 
 drun:
-	docker run -p 5000:5000 --mount src="$(realpath src)",target=/home/flaskuser/src,type=bind flask-docker-image:latest
-	docker rmi $(docker images --filter dangling=true -q)
+	docker run -p 5000:5000 --mount src="$(shell realpath src)",target=/home/flaskuser/src,type=bind $(IMAGE_NAME):latest

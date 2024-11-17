@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from flask import Flask
+from flask import Flask, jsonify
 from config import Config
 
 db = SQLAlchemy()
@@ -42,7 +42,10 @@ def create_app(config_class=Config):
 
     @app.route("/")
     def hello_world():
-        return "<p>hello world :3</p>"
+        return jsonify({
+            "success": True,
+            "text": "hello :3"
+        })
 
     return app
 
