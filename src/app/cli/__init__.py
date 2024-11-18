@@ -40,7 +40,7 @@ def seed_db():
 
         post = Post()
         post.from_dict(data)
-        db.session.add(user)
+        db.session.add(post)
 
     db.session.commit()
 
@@ -71,6 +71,9 @@ def migrate_fresh():
 @blueprint.cli.command("migrate_fresh_seed")
 def migrate_fresh_and_seed():
     """Migrate fresh and seed the database"""
+    from flask import current_app as app
 
+    app.logger.info("- Running custom command 'migrate_fresh'")
     os.system("flask custom migrate_fresh")
+    app.logger.info("- Running custom command 'seed'")
     os.system("flask custom seed")

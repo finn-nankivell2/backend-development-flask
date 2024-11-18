@@ -7,6 +7,8 @@ from sqlalchemy.orm import Mapped, WriteOnlyMapped
 import werkzeug.security
 
 from app import db
+from .traits import HasResource
+
 
 class User(db.Model):
     id: Mapped[int] = so.mapped_column(primary_key=True)
@@ -22,7 +24,7 @@ class User(db.Model):
         return werkzeug.security.check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return "<User {}>".format(self.username)
 
     def from_dict(self, data, new_user=False):
         for field in filter(lambda x: x in ("username", "email"), data):
@@ -35,14 +37,12 @@ class User(db.Model):
         data = {
             "id": self.id,
             "username": self.username,
-            "post_count": self.posts_count()
+            "post_count": self.posts_count(),
         }
         if include_email:
             data["email"] = self.email
 
         return data
-
-
 
 
 from .Post import Post
