@@ -47,7 +47,10 @@ def create_app(config_class=Config):
             "text": "hello :3"
         })
 
+    routes.register(app)
+
     return app
 
 
 from . import models  # noqa
+from . import routes  # noqa

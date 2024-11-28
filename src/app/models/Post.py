@@ -4,9 +4,10 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from sqlalchemy.orm import Mapped
 
-
 from datetime import datetime, timezone
 from .User import User
+
+from .util import resourcemethod
 
 
 class Post(db.Model):
@@ -23,7 +24,7 @@ class Post(db.Model):
         for field in filter(lambda x: x in ("body", "author", "timestamp"), data):
             setattr(self, field, data[field])
 
-    def to_dict(self, data, include_email=False):
+    def to_dict(self, data):
         data = {
             "id": self.id,
             "body": self.body,
@@ -31,6 +32,11 @@ class Post(db.Model):
             "author": self.author.username,
         }
         return data
+
+    @resourcemethod("id", "body")
+    def resource(self, data):
+        data["author"] = self.author.username
+        data["timestamp"] = self.timestamp.isoformat() + "Z",
 
 
 from .User import User  # noqa

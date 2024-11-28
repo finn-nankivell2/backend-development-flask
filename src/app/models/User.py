@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, WriteOnlyMapped
 import werkzeug.security
 
 from app import db
-from .traits import HasResource
+from .util import resourcemethod
 
 
 class User(db.Model):
@@ -33,16 +33,11 @@ class User(db.Model):
         if new_user and data.get("password"):
             self.set_password(data["password"])
 
-    def to_dict(self, data, include_email=False):
-        data = {
-            "id": self.id,
-            "username": self.username,
-            "post_count": self.posts_count(),
-        }
+    @resourcemethod("id", "username")
+    def resource(self, data, include_email=False):
+        data["post_count"] = len(self.posts)
         if include_email:
             data["email"] = self.email
-
-        return data
 
 
 from .Post import Post
